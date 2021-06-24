@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_import", "java_library", "java_plugin")
+load("//kotlin:kotlin.bzl", "kt_android_library")
 load("//kotlin/internal/utils:packager.bzl", "release_archive")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
@@ -47,7 +48,7 @@ java_plugin(
     ],
 )
 
-java_library(
+android_library(
     name = "dagger",
     exported_plugins = [":dagger_component_plugin"],
     exports = [
