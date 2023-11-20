@@ -371,6 +371,26 @@ def _run_ksp_builder_actions(
         mnemonic = "KotlinKsp",
     )
 
+    # # TODO: check plugins if an is generating java
+    # _run_kt_java_builder_action(
+    #     ctx = ctx,
+    #     rule_kind = rule_kind,
+    #     toolchains = toolchains,
+    #     srcs = srcs,
+    #     generated_src_jars = [],
+    #     associates = associates,
+    #     compile_deps = compile_deps,
+    #     deps_artifacts = deps_artifacts,
+    #     annotation_processors = annotation_processors,
+    #     transitive_runtime_jars = transitive_runtime_jars,
+    #     plugins = plugins,
+    #     outputs = {
+    #         "ksp_generated_java_srcjar": ksp_generated_java_srcjar,
+    #     },
+    #     build_kotlin = False,
+    #     mnemonic = "KotlinKspJava",
+    # )
+
     return struct(ksp_generated_class_jar = ksp_generated_java_srcjar)
 
 def _run_kt_builder_action(
@@ -689,7 +709,12 @@ def _run_kt_java_builder_actions(
         )
 
     # Run KSP
+    print("------")
+    print(has_kt_sources)
+    print(ksp_annotation_processors)
+    print(annotation_processors)
     if has_kt_sources and ksp_annotation_processors:
+        print("will ksp")
         ksp_outputs = _run_ksp_builder_actions(
             ctx,
             rule_kind = rule_kind,
@@ -698,11 +723,14 @@ def _run_kt_java_builder_actions(
             associates = associates,
             compile_deps = compile_deps,
             deps_artifacts = deps_artifacts,
+            
             annotation_processors = ksp_annotation_processors,
             transitive_runtime_jars = transitive_runtime_jars,
             plugins = plugins,
         )
         generated_ksp_src_jars.append(ksp_outputs.ksp_generated_class_jar)
+    else:
+        print("will not ksp")
 
     java_infos = []
 

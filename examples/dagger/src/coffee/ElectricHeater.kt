@@ -19,7 +19,7 @@ internal class ElectricHeater : Heater {
   override var isHot: Boolean = false
 
   override fun on() {
-    println("~ ~ ~ heating ~ ~ ~")
+    println("~ ~ ~ heatinge ~ ~ ~")
     this.isHot = true
   }
 

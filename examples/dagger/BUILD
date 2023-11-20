@@ -75,6 +75,7 @@ rm GeneratedModule.kt
 kt_jvm_library(
     name = "generated_lib",
     srcs = [":genereated_module_src"],
+    plugins = ["//third_party:dagger_component_plugin"],
     deps = [
         "//third_party:dagger",
     ],
@@ -87,6 +88,7 @@ kt_jvm_library(
         ":tea_lib_src",
         ":chai_lib_src",
     ],
+    plugins = ["//third_party:dagger_component_plugin"],
     deps = [
         ":generated_lib",
         "//third_party:dagger",

@@ -1,18 +1,18 @@
-load("@rules_java//java:defs.bzl", "java_library", "java_plugin")
+load("@rules_kotlin//kotlin:core.bzl", "kt_ksp_plugin")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
-java_plugin(
+kt_ksp_plugin(
     name = "dagger_component_plugin",
-    generates_api = True,
-    processor_class = "dagger.internal.codegen.ComponentProcessor",
-    visibility = ["//visibility:private"],
+    processor_class = "dagger.internal.codegen.KspComponentProcessor",
+    visibility = ["//visibility:public"],
     deps = [
         "@maven//:com_google_dagger_dagger_compiler",
     ],
 )
 
-java_library(
+kt_jvm_library(
     name = "dagger",
-    exported_plugins = [":dagger_component_plugin"],
+    plugins = [":dagger_component_plugin"],
     visibility = ["//visibility:public"],
     exports = [
         "@maven//:com_google_dagger_dagger",
