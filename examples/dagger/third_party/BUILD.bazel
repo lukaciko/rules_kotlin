@@ -10,12 +10,16 @@ kt_ksp_plugin(
     ],
 )
 
+# do we need to declare dagger.spi.shaded.androidx.room.compiler.processing.ksp.KspBasicAnnotationProcessor ?
+# probably not, it's just a parent class
+
 kt_jvm_library(
     name = "dagger",
     plugins = [":dagger_component_plugin"],
     visibility = ["//visibility:public"],
     exports = [
         "@maven//:com_google_dagger_dagger",
+        "@maven//:com_google_guava_guava",
         "@maven//:javax_inject_javax_inject",
     ],
 )

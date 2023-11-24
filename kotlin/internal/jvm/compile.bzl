@@ -414,6 +414,9 @@ def _run_kt_builder_action(
     args = _utils.init_args(ctx, rule_kind, associates.module_name, kotlinc_options)
 
     for f, path in outputs.items():
+        # this is probably where we need to add java generated jars
+        # currently "ksp_generated_java_srcjar": ctx.actions.declare_file(ctx.label.name + "-ksp-kt-gensrc.jar")
+        # nevermind, I think I added them. need to compile them nov
         args.add("--" + f, path)
 
     # Unwrap kotlinc_options/javac_options options or default to the ones being provided by the toolchain
@@ -790,17 +793,27 @@ def _run_kt_java_builder_actions(
     # Build Java
     # If there is Java source or KAPT generated Java source compile that Java and fold it into
     # the final ABI jar. Otherwise just use the KT ABI jar as final ABI jar.
-    if srcs.java or generated_kapt_src_jars or srcs.src_jars:
+
+    print("is there generated ksp")
+    print(generated_ksp_src_jars)
+
+    # todo: should run it only if generated_ksp_src_jars contains Java
+    if srcs.java or generated_kapt_src_jars or srcs.src_jars or generated_ksp_src_jars:
+        print("running javabuilder")
+        print(srcs.java)
+        print(generated_kapt_src_jars)
+        print(srcs.src_jars)
         javac_opts = javac_options_to_flags(ctx.attr.javac_opts[JavacOptions] if ctx.attr.javac_opts else toolchains.kt.javac_options)
 
         # Kotlin takes care of annotation processing. Note that JavaBuilder "discovers"
         # annotation processors in `deps` also.
         if len(srcs.kt) > 0:
             javac_opts.append("-proc:none")
+        # probably need to add generated KSP code here
         java_info = java_common.compile(
             ctx,
             source_files = srcs.java,
-            source_jars = generated_kapt_src_jars + srcs.src_jars,
+            source_jars = generated_ksp_src_jars + generated_kapt_src_jars + srcs.src_jars,
             output = ctx.actions.declare_file(ctx.label.name + "-java.jar"),
             deps = compile_deps.deps + kt_stubs_for_java,
             java_toolchain = toolchains.java,
