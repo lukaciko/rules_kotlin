@@ -371,26 +371,6 @@ def _run_ksp_builder_actions(
         mnemonic = "KotlinKsp",
     )
 
-    # # TODO: check plugins if an is generating java
-    # _run_kt_java_builder_action(
-    #     ctx = ctx,
-    #     rule_kind = rule_kind,
-    #     toolchains = toolchains,
-    #     srcs = srcs,
-    #     generated_src_jars = [],
-    #     associates = associates,
-    #     compile_deps = compile_deps,
-    #     deps_artifacts = deps_artifacts,
-    #     annotation_processors = annotation_processors,
-    #     transitive_runtime_jars = transitive_runtime_jars,
-    #     plugins = plugins,
-    #     outputs = {
-    #         "ksp_generated_java_srcjar": ksp_generated_java_srcjar,
-    #     },
-    #     build_kotlin = False,
-    #     mnemonic = "KotlinKspJava",
-    # )
-
     return struct(ksp_generated_class_jar = ksp_generated_java_srcjar)
 
 def _run_kt_builder_action(
@@ -414,9 +394,7 @@ def _run_kt_builder_action(
     args = _utils.init_args(ctx, rule_kind, associates.module_name, kotlinc_options)
 
     for f, path in outputs.items():
-        # this is probably where we need to add java generated jars
         # currently "ksp_generated_java_srcjar": ctx.actions.declare_file(ctx.label.name + "-ksp-kt-gensrc.jar")
-        # nevermind, I think I added them. need to compile them nov
         args.add("--" + f, path)
 
     # Unwrap kotlinc_options/javac_options options or default to the ones being provided by the toolchain
