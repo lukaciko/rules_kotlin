@@ -76,6 +76,7 @@ kt_jvm_library(
     name = "generated_lib",
     srcs = [":genereated_module_src"],
     plugins = ["//third_party:dagger_component_plugin"],
+    # plugins = ["//third_party:dagger_component_plugin"],
     deps = [
         "//third_party:dagger",
     ],
